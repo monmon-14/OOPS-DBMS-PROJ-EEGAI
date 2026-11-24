@@ -1,6 +1,4 @@
-# Project Architecture & Presentation Guide: ஈகை (Eegai) - Food Donation & Rescue System
-
-This guide presents the entire codebase structured by architectural layers (**Backend Core & OOP**, **DBMS & Data Access Layer**, and **Frontend UI**), complete with detailed annotations explaining every **Object-Oriented Programming (OOP)** and **Database Management Systems (DBMS)** concept used so that you can explain it with confidence during your project presentation.
+# ஈகை (Eegai) - Food Donation & Rescue System
 
 ---
 
@@ -49,7 +47,7 @@ This guide presents the entire codebase structured by architectural layers (**Ba
 
 ## 💡 PART 2: OOP (OBJECT-ORIENTED PROGRAMMING) TOPICS USED
 
-Here is how the 4 pillars of OOP plus advanced concepts are implemented:
+Here is how the 4 pillars of OOP concepts are implemented:
 
 | OOP Concept | Where it is Implemented in the Project | Why / Presentation Explanation |
 | :--- | :--- | :--- |
@@ -65,7 +63,6 @@ Here is how the 4 pillars of OOP plus advanced concepts are implemented:
 
 ## 🗄️ PART 3: DBMS (DATABASE MANAGEMENT SYSTEMS) TOPICS USED
 
-| DBMS Concept | Where it is Implemented in the Project | Why / Presentation Explanation |
 | :--- | :--- | :--- |
 | **1. Relational Schema & 3NF** | `Users`, `Donations`, `Claims`, `Deliveries` | Normalized to Third Normal Form (3NF) to eliminate data redundancy and insertion/deletion anomalies. |
 | **2. Primary & Foreign Keys** | `Users(id)` -> `Donations(donor_id)` -> `Claims(donation_id, ngo_id, volunteer_id)` -> `Deliveries(claim_id)` | Maintains Referential Integrity with `ON DELETE CASCADE` and `ON UPDATE CASCADE`. |
