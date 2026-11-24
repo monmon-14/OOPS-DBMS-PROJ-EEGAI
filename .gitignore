@@ -1,0 +1,8 @@
+bin/
+*.class
+*.log
+.DS_Store
+Thumbs.db
+hs_err_pid*.log
+run.zip
+

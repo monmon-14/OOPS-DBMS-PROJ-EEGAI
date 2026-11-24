@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ஈகை — பகுத்துண்டு பல்லுயிர் ஓம்புதல்</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* In-app Portal Navigation & View Switcher */
+    .app-screen { display: none; }
+    .app-screen.active { display: block; }
+    
+    .role-selection-wrapper {
+      max-width: 1060px;
+      margin: 36px auto;
+      padding: 0 20px 48px;
+    }
+    
+    .role-banner-hero {
+      background: linear-gradient(135deg, #4A1521 0%, #280A11 100%);
+      color: #FFF;
+      padding: 36px 28px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(229, 223, 213, 0.2);
+    }
+    
+    .role-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    
+    .role-choice-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-card);
+      border-radius: 18px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .role-choice-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--maroon-deep);
+    }
+    
+    .role-choice-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+    }
+    
+    .role-donor::before { background: var(--maroon-deep); }
+    .role-ngo::before { background: var(--banana-leaf); }
+    .role-volunteer::before { background: #8C5319; }
+    
+    .role-card-icon {
+      font-size: 38px;
+      margin-bottom: 16px;
+    }
+    
+    .role-card-title-tamil {
+      font-family: var(--font-tamil);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--maroon-deep);
+      margin-bottom: 4px;
+    }
+    
+    .role-card-title-en {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .role-card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    
+    .role-bottom-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .portal-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-card);
+    }
+  </style>
+</head>
+<body class="kolam-watermark">
+
+  <!-- =========================================================================
+       1. Motion Video Intro Overlay (In front of existing app)
+       Plays Hands_placing_food_on_plate_5d86161d.mp4 -> Title Card -> Opens App
+       ========================================================================= -->
+  <div id="videoIntroOverlay" class="video-intro-overlay" role="dialog" aria-modal="true" aria-label="அறிமுக காணொளி">
+    <div class="intro-video-wrapper">
+      <video id="introVideo" class="intro-video-element" autoplay muted playsinline preload="auto">
+        <source src="Hands_placing_food_on_plate_5d86161d.mp4" type="video/mp4">
+      </video>
+
+      <div class="intro-gradient-scrim"></div>
+
+      <!-- Audio Mute/Unmute Toggle -->
+      <button id="introAudioBtn" class="intro-audio-btn" type="button" aria-label="ஒலியை மாற்றுக">
+        <span id="audioIcon">🔇</span> <span id="audioText">ஒலி (Unmute)</span>
+      </button>
+
+      <div class="intro-progress-track">
+        <div id="introProgressBar" class="intro-progress-bar"></div>
+      </div>
+
+      <!-- Title & Tagline Card -->
+      <div id="introTitleCard" class="intro-title-card" aria-live="polite">
+        <div class="intro-emblem">ஈ</div>
+        <h1 class="intro-main-title">ஈகை</h1>
+        <div class="intro-divider-kolam"></div>
+        <p class="intro-main-tagline">பகுத்துண்டு பல்லுயிர் ஓம்புதல்</p>
+        <div class="intro-sub-indicator">
+          <span class="intro-indicator-dot"></span>
+          <span>வலைத்தளத்திற்குச் செல்கிறது...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cultural Kolam Top Accent -->
+  <div class="kolam-border"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#" class="brand-group" onclick="showScreen('screen-role-selection')">
+        <div class="brand-logo-icon">ஈ</div>
+        <div class="brand-text-block">
+          <span class="brand-title-tamil">ஈகை</span>
+          <span class="brand-tagline-tamil">பகுத்துண்டு பல்லுயிர் ஓம்புதல்</span>
+          <span class="brand-subtext-en">Community Food Donation & Rescue Network</span>
+        </div>
+      </a>
+
+      <div class="header-cta-group">
+        <button id="replayIntroBtn" class="btn btn-outline" type="button" title="அறிமுக வீடியோவை மீண்டும் காண்க">
+          ▶ அறிமுக வீடியோ
+        </button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-role-selection')">
+          முக்கிய மெனு (Home)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       2. Screen 1: Role Selection Portal (Exact Replica of RoleSelectionFrame)
+       ========================================================================= -->
+  <main class="role-selection-wrapper">
+    
+    <div id="screen-role-selection" class="app-screen active">
+      <div class="role-banner-hero">
+        <div style="font-size: 32px; font-weight: 800; font-family: var(--font-tamil); margin-bottom: 6px;">ஈகை</div>
+        <div style="font-size: 18px; font-weight: 700; color: #9BB39A; font-family: var(--font-tamil); margin-bottom: 10px;">பகுத்துண்டு பல்லுயிர் ஓம்புதல்</div>
+        <p style="font-size: 14px; color: #F7F4EE; max-width: 650px; margin: 0 auto; line-height: 1.5;">
+          Connecting local food donors, rescue charities, and courier volunteers to end hunger.
+          Choose your role below to enter the portal.
+        </p>
+      </div>
+
+      <div class="role-grid-3">
+        <!-- Role 1: Donor -->
+        <div class="role-choice-card role-donor" onclick="showScreen('screen-donor')">
+          <div class="role-card-icon">🍲</div>
+          <div class="role-card-title-tamil">உணவு வழங்குபவர்</div>
+          <div class="role-card-title-en">Food Donor Portal</div>
+          <p class="role-card-desc">
+            Post surplus cooked food, bakery items, or event feasts in seconds. Track live pickup and delivery status.
+          </p>
+          <button class="btn btn-primary" style="width: 100%;">நுழைக (Enter Donor Hub) →</button>
+        </div>
+
+        <!-- Role 2: NGO Partner -->
+        <div class="role-choice-card role-ngo" onclick="showScreen('screen-ngo')">
+          <div class="role-card-icon">🏢</div>
+          <div class="role-card-title-tamil">தொண்டு நிறுவனம்</div>
+          <div class="role-card-title-en">NGO Partner Hub</div>
+          <p class="role-card-desc">
+            Browse verified food listings in your area, claim meals for orphanages/shelters, and verify food distribution.
+          </p>
+          <button class="btn btn-primary" style="width: 100%; background: var(--banana-leaf);">நுழைக (Enter NGO Hub) →</button>
+        </div>
+
+        <!-- Role 3: Volunteer Courier -->
+        <div class="role-choice-card role-volunteer" onclick="showScreen('screen-volunteer')">
+          <div class="role-card-icon">🚴</div>
+          <div class="role-card-title-tamil">தன்னார்வலர்</div>
+          <div class="role-card-title-en">Volunteer Courier Hub</div>
+          <p class="role-card-desc">
+            Pick up food safely from donors and deliver to NGOs. Track missions in real-time with our 5-stage timeline.
+          </p>
+          <button class="btn btn-primary" style="width: 100%; background: #8C5319;">நுழைக (Enter Volunteer Hub) →</button>
+        </div>
+      </div>
+
+      <div class="role-bottom-actions">
+        <button class="btn btn-secondary" onclick="showScreen('screen-register')">
+          📝 புதிய கணக்கு பதிவு செய்க (Register)
+        </button>
+        <button class="btn btn-outline" onclick="showScreen('screen-reports')">
+          📊 பொது தாக்க அறிக்கைகள் (Public Reports)
+        </button>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         3. Screen 2: Donor Portal
+         ========================================================================= -->
+    <div id="screen-donor" class="app-screen">
+      <div class="portal-header-bar">
+        <div>
+          <h2 style="font-family: var(--font-tamil); color: var(--maroon-deep); font-size: 24px;">உணவு வழங்குபவர் தளம் (Donor Portal)</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">பகுத்துண்டு பல்லுயிர் ஓம்புதல் • புதிய நற்கொடை பதிவு</p>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-role-selection')">← பின்செல்க (Back)</button>
+      </div>
+
+      <div class="form-card" style="margin-top: 0;">
+        <h3 style="font-family: var(--font-tamil); color: var(--maroon-deep); margin-bottom: 16px;">புதிய உணவு தானம் பதிவு</h3>
+        <form onsubmit="handleDonorSubmit(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">உணவு பெயர் / விபரம் *</label>
+              <input type="text" id="donorFoodName" class="form-input" placeholder="எ.கா: கல்யாண சாப்பாடு & சாம்பார் சாதம்" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">நபர்கள் அளவு (Meals Count) *</label>
+              <input type="number" id="donorQuantity" class="form-input" placeholder="80" min="1" required>
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">உணவு வகை *</label>
+              <select class="form-select" id="donorType">
+                <option value="VEG">சைவம் (Vegetarian)</option>
+                <option value="NON_VEG">அசைவம் (Non-Vegetarian)</option>
+                <option value="BAKERY">பேக்கரி / ரொட்டி</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">செல்லுபடியாகும் நேரம் (Hours Left) *</label>
+              <input type="number" class="form-input" placeholder="4" min="1" max="24" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">சேகரிக்கும் முகவரி *</label>
+            <input type="text" class="form-input" placeholder="கதவு எண், தெரு, பகுதி, சென்னை" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 8px;">
+            தானத்தை சமர்ப்பிக்கவும் (Post Donation)
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         4. Screen 3: NGO Partner Hub
+         ========================================================================= -->
+    <div id="screen-ngo" class="app-screen">
+      <div class="portal-header-bar">
+        <div>
+          <h2 style="font-family: var(--font-tamil); color: var(--maroon-deep); font-size: 24px;">தொண்டு நிறுவனம் தளம் (NGO Partner Hub)</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">கிடைக்கும் உணவுகளை பார்வையிட்டு கோரலாம்</p>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-role-selection')">← பின்செல்க (Back)</button>
+      </div>
+
+      <div class="listings-grid">
+        <article class="food-card">
+          <div class="card-body">
+            <div class="card-badge-row">
+              <span class="badge-tag badge-veg">சைவம்</span>
+              <span class="badge-tag badge-festival">Available</span>
+            </div>
+            <h3 class="card-food-name-tamil">பாரம்பரிய கல்யாண சாப்பாடு & கூட்டு</h3>
+            <ul class="card-details-list">
+              <li>📦 <strong>அளவு:</strong> 120 நபர்கள்</li>
+              <li>📍 <strong>இடம்:</strong> தியாகராய நகர், சென்னை</li>
+              <li>⏳ <strong>செல்லுபடியாகும் நேரம்:</strong> 3 மணி நேரம்</li>
+            </ul>
+            <button class="btn btn-primary" style="width: 100%;" onclick="alert('உணவு கோரப்பட்டது! தன்னார்வலர் ஒதுக்கப்படுகிறார்.')">
+              உணவை கோருக (Claim Now)
+            </button>
+          </div>
+        </article>
+
+        <article class="food-card">
+          <div class="card-body">
+            <div class="card-badge-row">
+              <span class="badge-tag badge-veg">சைவம்</span>
+              <span class="badge-tag badge-demo">Available</span>
+            </div>
+            <h3 class="card-food-name-tamil">வெஜிடபிள் பிரியாணி & தயிர் பச்சடி</h3>
+            <ul class="card-details-list">
+              <li>📦 <strong>அளவு:</strong> 50 பார்சல்கள்</li>
+              <li>📍 <strong>இடம்:</strong> காந்திபுரம், கோயம்புத்தூர்</li>
+              <li>⏳ <strong>செல்லுபடியாகும் நேரம்:</strong> 4 மணி நேரம்</li>
+            </ul>
+            <button class="btn btn-primary" style="width: 100%;" onclick="alert('உணவு கோரப்பட்டது! தன்னார்வலர் ஒதுக்கப்படுகிறார்.')">
+              உணவை கோருக (Claim Now)
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         5. Screen 4: Volunteer Courier Hub
+         ========================================================================= -->
+    <div id="screen-volunteer" class="app-screen">
+      <div class="portal-header-bar">
+        <div>
+          <h2 style="font-family: var(--font-tamil); color: var(--maroon-deep); font-size: 24px;">தன்னார்வலர் தளம் (Volunteer Courier Hub)</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">உணவு சேகரிப்பு மற்றும் விநியோகப் பணிகள்</p>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-role-selection')">← பின்செல்க (Back)</button>
+      </div>
+
+      <div class="food-card" style="padding: 24px;">
+        <h3 style="font-family: var(--font-tamil); color: var(--maroon-deep); margin-bottom: 8px;">தற்போதைய பணி (Active Delivery Task)</h3>
+        <p style="font-size: 14px; color: var(--text-dark); margin-bottom: 12px;"><strong>பணி #7:</strong> அன்னை இல்லத்திற்கு உணவு விநியோகம்</p>
+        <div style="background: var(--bg-subtle); padding: 16px; border-radius: 12px; margin-bottom: 16px; font-size: 13px; line-height: 1.6;">
+          <div>📍 <strong>எடுக்கும் இடம்:</strong> ஶ்ரீ கிருஷ்ணா மஹால், சென்னை</div>
+          <div>🏁 <strong>சேர்க்கும் இடம்:</strong> அன்னை தெரசா ஆதரவற்றோர் இல்லம்</div>
+          <div>🍲 <strong>அளவு:</strong> 120 நபர்களுக்கான உணவு</div>
+        </div>
+        <button class="btn btn-primary" onclick="alert('நிலை புதுப்பிக்கப்பட்டது: உணவு பெறப்பட்டது (Picked Up)!')">
+          உணவு பெறப்பட்டது (Mark Picked Up)
+        </button>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         6. Screen 5: Register
+         ========================================================================= -->
+    <div id="screen-register" class="app-screen">
+      <div class="portal-header-bar">
+        <div>
+          <h2 style="font-family: var(--font-tamil); color: var(--maroon-deep); font-size: 24px;">புதிய கணக்கு பதிவு (Register Account)</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">ஈகை குடும்பத்தில் இணைந்திடுங்கள்</p>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-role-selection')">← பின்செல்க (Back)</button>
+      </div>
+
+      <div class="form-card">
+        <form onsubmit="handleRegisterSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">பங்கு (Role) *</label>
+            <select class="form-select" id="regRole">
+              <option value="DONOR">உணவு வழங்குபவர் (Donor)</option>
+              <option value="NGO">தொண்டு நிறுவனம் (NGO)</option>
+              <option value="VOLUNTEER">தன்னார்வலர் (Volunteer)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">பெயர் / அமைப்பின் பெயர் *</label>
+            <input type="text" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">தொலைபேசி எண் *</label>
+            <input type="tel" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">கடவுச்சொல் (Password) *</label>
+            <input type="password" class="form-input" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 8px;">
+            பதிவை நிறைவு செய் (Complete Registration)
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         7. Screen 6: Public Reports
+         ========================================================================= -->
+    <div id="screen-reports" class="app-screen">
+      <div class="portal-header-bar">
+        <div>
+          <h2 style="font-family: var(--font-tamil); color: var(--maroon-deep); font-size: 24px;">பொது தாக்க அறிக்கைகள் (Public Reports)</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">ஈகையின் வெளிப்படையான சாதனைகள் மற்றும் தாக்கம்</p>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-role-selection')">← பின்செல்க (Back)</button>
+      </div>
+
+      <div class="stats-grid" style="margin-bottom: 24px;">
+        <div class="stat-item" style="background:#FFF; border-radius:14px; border:1px solid var(--border-card);">
+          <div class="stat-number">14,250+</div>
+          <div class="stat-label-tamil">பகிர்ந்த உணவுகள்</div>
+        </div>
+        <div class="stat-item" style="background:#FFF; border-radius:14px; border:1px solid var(--border-card);">
+          <div class="stat-number">520+</div>
+          <div class="stat-label-tamil">கொடையாளர்கள்</div>
+        </div>
+        <div class="stat-item" style="background:#FFF; border-radius:14px; border:1px solid var(--border-card);">
+          <div class="stat-number">72+</div>
+          <div class="stat-label-tamil">தொண்டு நிறுவனங்கள்</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div style="text-align: center;">
+        <div class="footer-brand-title">ஈகை</div>
+        <div class="footer-brand-tagline">பகுத்துண்டு பல்லுயிர் ஓம்புதல்</div>
+        <p style="font-size: 13px; color: #A8A29E; margin-top: 8px;">
+          © 2026 ஈகை — Community Food Donation & Rescue Network. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for Intro Controller & Screen Switcher -->
+  <script>
+    function showScreen(screenId) {
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('videoIntroOverlay');
+      const video = document.getElementById('introVideo');
+      const progressBar = document.getElementById('introProgressBar');
+      const titleCard = document.getElementById('introTitleCard');
+      const audioBtn = document.getElementById('introAudioBtn');
+      const audioIcon = document.getElementById('audioIcon');
+      const audioText = document.getElementById('audioText');
+      const replayBtn = document.getElementById('replayIntroBtn');
+
+      let hasTransitioned = false;
+
+      if (video) {
+        video.addEventListener('timeupdate', () => {
+          if (video.duration) {
+            const percent = (video.currentTime / video.duration) * 100;
+            if (progressBar) progressBar.style.width = percent + '%';
+          }
+        });
+
+        video.addEventListener('ended', () => {
+          triggerTitleAndTransition();
+        });
+
+        video.play().catch(err => {
+          video.muted = true;
+          video.play().catch(e => {
+            setTimeout(triggerTitleAndTransition, 1000);
+          });
+        });
+      }
+
+      if (audioBtn && video) {
+        audioBtn.addEventListener('click', () => {
+          video.muted = !video.muted;
+          if (video.muted) {
+            audioIcon.textContent = '🔇';
+            audioText.textContent = 'ஒலி (Unmute)';
+          } else {
+            audioIcon.textContent = '🔊';
+            audioText.textContent = 'ஒலி நிறுத்து (Mute)';
+          }
+        });
+      }
+
+      function triggerTitleAndTransition() {
+        if (hasTransitioned) return;
+        hasTransitioned = true;
+
+        if (titleCard) titleCard.classList.add('visible');
+
+        setTimeout(() => {
+          if (overlay) {
+            overlay.classList.add('fade-out');
+            setTimeout(() => {
+              overlay.style.display = 'none';
+            }, 1200);
+          }
+        }, 1800);
+      }
+
+      window.replayIntro = function() {
+        hasTransitioned = false;
+        if (overlay && video) {
+          overlay.style.display = 'flex';
+          overlay.classList.remove('fade-out');
+          if (titleCard) titleCard.classList.remove('visible');
+          if (progressBar) progressBar.style.width = '0%';
+          video.currentTime = 0;
+          video.play();
+        }
+      };
+
+      if (replayBtn) replayBtn.addEventListener('click', window.replayIntro);
+    });
+
+    function handleDonorSubmit(e) {
+      e.preventDefault();
+      alert('நன்றி! உணவு தானம் வெற்றிகரமாக பதிவு செய்யப்பட்டது.');
+      showScreen('screen-role-selection');
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      alert('பதிவு வெற்றிகரமாக முடிந்தது! இப்போது உள்நுழையலாம்.');
+      showScreen('screen-role-selection');
+    }
+  </script>
+</body>
+</html>

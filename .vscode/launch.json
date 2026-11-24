@@ -1,0 +1,45 @@
+{
+    version: 0.2.0,
+    configurations: [
+        {
+            type: java,
+            name: Launch Eegai Food Donation App,
+            request: launch,
+            mainClass: com.fooddonation.Main,
+            projectName: project,
+            vmArgs: -Dfile.encoding=UTF-8
+        },
+        {
+            type: java,
+            name: Test Auth and Reg Flow,
+            request: launch,
+            mainClass: com.fooddonation.TestAuthFlow,
+            projectName: project,
+            vmArgs: -Dfile.encoding=UTF-8
+        },
+        {
+            type: java,
+            name: Test Donor Flow,
+            request: launch,
+            mainClass: com.fooddonation.TestDonorFlow,
+            projectName: project,
+            vmArgs: -Dfile.encoding=UTF-8
+        },
+        {
+            type: java,
+            name: Test NGO and Volunteer Flow,
+            request: launch,
+            mainClass: com.fooddonation.TestNgoVolunteerFlow,
+            projectName: project,
+            vmArgs: -Dfile.encoding=UTF-8
+        },
+        {
+            type: java,
+            name: Test Delivery Tracking Flow,
+            request: launch,
+            mainClass: com.fooddonation.TestDeliveryTrackingFlow,
+            projectName: project,
+            vmArgs: -Dfile.encoding=UTF-8
+        }
+    ]
+}
